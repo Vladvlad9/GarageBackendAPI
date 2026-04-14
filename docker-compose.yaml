@@ -1,4 +1,16 @@
 services:
+  db:
+    image: postgres:15.1
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=garage
+      - POSTGRES_PASSWORD=admin
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - '6432:5432'
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+
   api:
     build:
       context: ./
@@ -9,4 +21,7 @@ services:
       - PORT=9883
     volumes:
       - ./:/opt
-#    depends_on: [ db ]
+    depends_on: [ db ]
+
+volumes:
+  db_volume:

@@ -1,10 +1,11 @@
 from uvicorn import run
+from settings import settings
 
 if __name__ == "__main__":
     run(
-        app="server:app",
-        host="0.0.0.0",
-        port=8080,
+        app="app:get_application",
+        host=settings.SERVER.HOST,
+        port=settings.SERVER.PORT,
         http="httptools",
         loop="uvloop",
         interface="asgi3",

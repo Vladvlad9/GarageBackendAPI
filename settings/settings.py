@@ -12,7 +12,7 @@ __all__ = ["settings"]
 
 
 class Settings(BaseSettingsConfig):
-    BASE_DIR = Path(__file__).parent.parent
+    BASE_DIR: Path = Path(__file__).parent.parent
 
     SERVER: Annotated[ServerSettings, Field(default_factory=ServerSettings)]
     APP: Annotated[AppSettings, Field(default_factory=AppSettings)]

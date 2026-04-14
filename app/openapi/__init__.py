@@ -1,4 +1,4 @@
-from tags import TAGS_METADATA
-from description import DESCRIPTION
+from .description import DESCRIPTION
+from .tags import TAGS_METADATA
 
-__all__ = ["TAGS_METADATA", "DESCRIPTION"]
+__all__ = ["DESCRIPTION", "TAGS_METADATA"]

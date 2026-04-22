@@ -16,4 +16,5 @@ dependencies = [
     "bcrypt>=5.0.0",
     "redis>=7.4.0",
     "orjson>=3.11.8",
+    "cryptography>=46.0.7",
 ]

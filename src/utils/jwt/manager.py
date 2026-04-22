@@ -8,8 +8,9 @@ from src.enums import JWTPrefix
 from src.exeptions import TokenIsBannedError
 from src.types import TokenPayload
 from src.utils.datetime import now
-from src.utils.jwt import JWTDecodeMixin, JWTEncodeMixin, JWTStorage
+from src.utils.jwt import JWTDecodeMixin, JWTEncodeMixin
 
+from src.utils.jwt.storage import JWTStorage
 
 __all__ = ["JWTManager"]
 
@@ -22,9 +23,9 @@ class JWTManager(JWTEncodeMixin, JWTDecodeMixin):
 
     @classmethod
     async def create_access_token(
-        cls,
-        user_id: str,
-        jti: str,
+            cls,
+            user_id: str,
+            jti: str,
     ) -> str:
         payload = TokenPayload(
             sub=f"{user_id}",
@@ -36,9 +37,9 @@ class JWTManager(JWTEncodeMixin, JWTDecodeMixin):
 
     @classmethod
     async def create_refresh_token(
-        cls,
-        user_id: str,
-        jti: str,
+            cls,
+            user_id: str,
+            jti: str,
     ) -> str:
         payload = TokenPayload(
             sub=user_id,
@@ -62,9 +63,9 @@ class JWTManager(JWTEncodeMixin, JWTDecodeMixin):
 
     @classmethod
     async def ban_token_pair(
-        cls,
-        payload: TokenPayload,
-        **kwargs,
+            cls,
+            payload: TokenPayload,
+            **kwargs,
     ) -> None:
         iat = payload.get("iat")
         if isinstance(iat, int | float):
@@ -78,8 +79,8 @@ class JWTManager(JWTEncodeMixin, JWTDecodeMixin):
 
     @classmethod
     async def ban_all_user_tokens(
-        cls,
-        user_id: str,
+            cls,
+            user_id: str,
     ) -> None:
         await cls.storage.set(
             key=cls.storage.generate_key(key=user_id, prefix=JWTPrefix.SUB),

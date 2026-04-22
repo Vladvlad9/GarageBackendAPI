@@ -1,4 +1,4 @@
-from src.exeptions import BaseError
+from src.exeptions.base import BaseError
 
 __all__ = ["IncorrectPasswordError", "TokenIsBannedError"]
 

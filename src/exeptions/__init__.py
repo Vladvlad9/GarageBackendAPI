@@ -1,8 +1,7 @@
-from .auth import IncorrectPasswordError, TokenIsBannedError
-from .base import ObjectAlreadyExistError, ObjectNotFoundError, FastAPICacheError, InternalServerError, BaseError
+from src.exeptions.auth import IncorrectPasswordError, TokenIsBannedError
+from src.exeptions.base import ObjectAlreadyExistError, ObjectNotFoundError, FastAPICacheError, InternalServerError
 
 __all__ = [
-    "BaseError",
     "ObjectAlreadyExistError",
     "ObjectNotFoundError",
     "FastAPICacheError",

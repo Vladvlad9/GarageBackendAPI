@@ -2,7 +2,6 @@ from .exeptions import JWTError, DecodeError, JWTStorageUnavailableError, Incorr
 from .decode import JWTDecodeMixin
 from .encode import JWTEncodeMixin
 from .manager import JWTManager
-from .storage import JWTStorage
 
 __all__ = [
     # exeptions
@@ -21,5 +20,6 @@ __all__ = [
     "JWTManager",
 
     # storage
-    "JWTStorage",
+    # "JWTStorage",
 ]
+

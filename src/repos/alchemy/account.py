@@ -1,7 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.alchemy.models import Account
-from src.repos.alchemy import BaseRepo
+# from src.repos.alchemy import BaseRepo
+
+from src.repos.alchemy.base import BaseRepo
 
 __all__ = ["AccountRepo"]
 

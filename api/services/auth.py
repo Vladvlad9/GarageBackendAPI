@@ -31,8 +31,10 @@ class RESTAuthService:
     def __init__(self, session: AsyncSession):
         self._auth_service = AuthService(session=session)
 
+    @auth_exception_handler()
     async def sign_in(self, data: SignInRequestDTO) -> TokenPairDTO:
         return await self._auth_service.sign_in(data=data)
 
+    @auth_exception_handler()
     async def sign_up(self, data: SignUpRequestDTO) -> Account:
         return await self._auth_service.sign_up(data=data)

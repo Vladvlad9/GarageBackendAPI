@@ -3,7 +3,7 @@ from .datetime import now
 from src.utils.jwt import (
     JWTDecodeMixin,
     JWTEncodeMixin,
-    JWTStorage,
+    # JWTStorage,
     JWTError,
     JWTStorageUnavailableError,
     DecodeError,
@@ -15,7 +15,7 @@ __all__ = [
 
     "JWTDecodeMixin",
     "JWTEncodeMixin",
-    "JWTStorage",
+    # "JWTStorage",
     "JWTError",
     "DecodeError",
     "JWTStorageUnavailableError",

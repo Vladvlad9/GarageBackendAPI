@@ -23,5 +23,13 @@ services:
       - ./:/opt
     depends_on: [ db ]
 
+  redis:
+    image: redis:7-alpine
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 6379:6379
+
 volumes:
   db_volume:

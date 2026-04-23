@@ -9,7 +9,7 @@ from api.exeption import (
     ObjectNotFoundException,
     ServiceResponseValidationException
 )
-from src.database.alchemy.models import Account
+from src.database.alchemy.models import User
 from src.exeptions import ObjectNotFoundError, IncorrectPasswordError, ObjectAlreadyExistError
 from src.services import AuthService
 from src.types import TokenPairDTO, SignInRequestDTO, SignUpRequestDTO
@@ -19,11 +19,11 @@ __all__ = ["RESTAuthService"]
 auth_exception_handler = ExceptionHandlerFactory(
     exc_mapping={
         ValidationError: ServiceResponseValidationException(name="auth"),
-        ObjectNotFoundError: ObjectNotFoundException(name="account"),
+        ObjectNotFoundError: ObjectNotFoundException(name="user"),
         IncorrectPasswordError: IncorrectPasswordException,
-        ObjectAlreadyExistError: ObjectExistsException(name="account"),
+        ObjectAlreadyExistError: ObjectExistsException(name="user"),
     },
-    default_exc=InternalServerException(name="account"),
+    default_exc=InternalServerException(name="user"),
 )
 
 
@@ -36,5 +36,5 @@ class RESTAuthService:
         return await self._auth_service.sign_in(data=data)
 
     @auth_exception_handler()
-    async def sign_up(self, data: SignUpRequestDTO) -> Account:
+    async def sign_up(self, data: SignUpRequestDTO) -> User:
         return await self._auth_service.sign_up(data=data)

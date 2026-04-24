@@ -14,6 +14,8 @@ from src.exeptions import ObjectNotFoundError, IncorrectPasswordError, ObjectAlr
 from src.services import AuthService
 from src.types import TokenPairDTO, SignInRequestDTO, SignUpRequestDTO
 
+from src.types.user import UserDetailResponseDTO
+
 __all__ = ["RESTAuthService"]
 
 auth_exception_handler = ExceptionHandlerFactory(
@@ -36,5 +38,5 @@ class RESTAuthService:
         return await self._auth_service.sign_in(data=data)
 
     @auth_exception_handler()
-    async def sign_up(self, data: SignUpRequestDTO) -> User:
+    async def sign_up(self, data: SignUpRequestDTO) -> UserDetailResponseDTO:
         return await self._auth_service.sign_up(data=data)

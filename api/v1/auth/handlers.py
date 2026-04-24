@@ -6,6 +6,8 @@ from src.types import SignInRequestDTO, SignUpRequestDTO, TokenPairDTO
 
 from src.types.exeptions import ToManyRequestsErrorDTO, HTTPExceptionErrorDTO, IncorrectPasswordErrorDTO
 
+from src.types.user import UserDetailResponseDTO
+
 __all__ = ["router"]
 
 router = APIRouter(tags=["Auth"])
@@ -14,13 +16,13 @@ router = APIRouter(tags=["Auth"])
 @router.post(
     path="/signup",
     summary="Регистрация",
-    response_model=None,
+    response_model=UserDetailResponseDTO,
     responses={
         status.HTTP_429_TOO_MANY_REQUESTS: {"model": ToManyRequestsErrorDTO},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": HTTPExceptionErrorDTO},
     }
 )
-async def sign_up(data: SignUpRequestDTO, service: AuthServiceDepends):
+async def sign_up(data: SignUpRequestDTO, service: AuthServiceDepends) -> UserDetailResponseDTO:
     return await service.sign_up(data=data)
 
 

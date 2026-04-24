@@ -2,6 +2,7 @@ from abc import ABC
 from typing import TypeVar, Generic, Any, Sequence
 
 from sqlalchemy import select, insert, update, delete, func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 
@@ -29,16 +30,16 @@ class BaseRepo(ABC, Generic[ModelType]):
         return result.scalar_one_or_none()
 
     async def update(self, filters: list[Any], obj: dict) -> ModelType:
-        statement = update(self._model).filter(*filters).values(*obj).returning(self._model)
-        result = await self._session.execute(statement)
+        result = await self._session.execute(
+            statement=update(self._model).filter(*filters).values(**obj).returning(self._model)
+        )
         await self._session.commit()
         return result.scalar_one_or_none()
 
-    async def delete(self, filters: list[Any]) -> ModelType:
+    async def delete(self, filters: list[Any]) -> None:
         statement = delete(self._model).filter(*filters).returning(self._model)
-        result = await self._session.execute(statement)
+        await self._session.execute(statement)
         await self._session.commit()
-        return result.scalar_one_or_none()
 
     async def count(self, filters: list[Any] | None = None) -> int:
         statement = select(func.count(self._model.id))
@@ -47,7 +48,11 @@ class BaseRepo(ABC, Generic[ModelType]):
         return await self._session.scalar(statement=statement)
 
     async def list_data(
-            self, page: int, page_size: int, optional: list[Any] | None = None, filters: list[Any] | None = None
+            self,
+            page: int,
+            page_size: int,
+            optional: list[Any] | None = None,
+            filters: list[Any] | None = None
     ) -> Sequence[Any | ModelType]:
         statement = select(self._model)
         if optional:
@@ -64,3 +69,8 @@ class BaseRepo(ABC, Generic[ModelType]):
         result = await self._session.execute(statement)
         await self._session.flush()
         return result.scalar_one_or_none()
+
+    async def soft_delete(self, filters: list[Any], obj: dict) -> None:
+        statement = update(self._model).filter(*filters).values(**obj)
+        await self._session.execute(statement)
+        await self._session.commit()

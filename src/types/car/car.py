@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Any, List
 from uuid import UUID
 
 from pydantic import Field, model_validator, PrivateAttr
@@ -17,6 +17,8 @@ __all__ = [
     "CarUpdateRequestDTO",
     "CarDeleteRequestDTO",
 ]
+
+from src.types.service_item import ServiceItemBaseDTO
 
 from src.utils import now
 
@@ -54,7 +56,7 @@ class CarFilterDTO(ImmutableDTO):
 
 
 class CarDetailResponseDTO(CarBaseDTO):
-    pass
+    service_items: List[ServiceItemBaseDTO]
 
 
 class CarUpdateRequestDTO(ImmutableDTO):
@@ -90,6 +92,25 @@ class CarCreateDTO(ImmutableDTO):
     model: ModelBrandTypes
     year: CarYearTypes
     mileage: MileageTypes
+
+    @model_validator(mode='before')
+    @classmethod
+    def tess(cls, data: Any) -> Any:
+        # data - это словарь или другой входной формат
+        print("Полученные данные:", data)
+
+        # Доступ к полям как к ключам словаря
+        if isinstance(data, dict):
+            print(data.get('brand'))  # используем .get() для безопасности
+            print(data.get('model'))
+            print(data.get('year'))
+        else:
+            # Если это уже объект
+            print(getattr(data, 'brand', None))
+            print(getattr(data, 'model', None))
+            print(getattr(data, 'year', None))
+
+        return data  # обязательно вернуть данные!
 
 
 class CarDeleteRequestDTO(ImmutableDTO):

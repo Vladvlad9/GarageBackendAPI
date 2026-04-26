@@ -3,6 +3,7 @@ from uuid import UUID
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from src.database.alchemy.models import Car
 from src.exeptions import ObjectNotFoundError, InternalServerError
@@ -61,7 +62,7 @@ class CarService:
 
     async def car_list(self, page: int, page_size: int, filters: CarFilterDTO) -> Paginator[CarDetailResponseDTO]:
         count = await self._repo.count()
-        filter_conditions = []
+        filter_conditions = [Car.is_archived == False]
 
         if filters.fuel_type is not None:
             filter_conditions.append(Car.fuel_type == filters.fuel_type)
@@ -73,6 +74,7 @@ class CarService:
             page=page,
             page_size=page_size,
             filters=[*filter_conditions] if filter_conditions else None,
+            optional=[joinedload(Car.service_items)]
         )
 
         return Paginator(

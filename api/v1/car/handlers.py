@@ -78,6 +78,8 @@ async def create(
         service: CarServiceDepends,
         payload: TokenPayloadDepends
 ) -> CarDetailResponseDTO:
+    print(f"Token {payload.get("sub")}")
+    print(f"Data {data}")
     return await service.create(data=data, user_id=payload.get("sub"))
 
 

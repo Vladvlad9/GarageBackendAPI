@@ -29,7 +29,7 @@ class AuthService:
         return TokenPairDTO.model_validate(obj=await JWTManager.create_token_pair(user_id=user.id))
 
     async def sign_up(self, data: SignUpRequestDTO) -> UserDetailResponseDTO:
-        user_data = data.model_dump(exclude={"password"})
+        user_data = data.model_dump(exclude={"password", "confirm"})
         user_data["name"] = str(data.name)
         user_data["email"] = str(data.email).lower()
         user_data["password_hash"] = PasswordManager.hash(plain_password=data.password)

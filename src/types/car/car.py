@@ -16,6 +16,7 @@ __all__ = [
     "CarCreateDTO",
     "CarUpdateRequestDTO",
     "CarDeleteRequestDTO",
+    "CarBaseMutableDTO",
 ]
 
 from src.types.service_item import ServiceItemBaseDTO
@@ -42,6 +43,36 @@ class CarBaseDTO(ImmutableDTO):
     created_at: datetime
     updated_at: datetime | None
 
+    initials: str | None = None
+
+    @model_validator(mode='after')
+    def auto_initials(self) -> 'CarBaseMutableDTO':
+        if self.brand and self.model:
+            name = f"{self.brand} {self.model}"
+            words = name.split()
+            self.initials = ''.join(word[0] for word in words)[:2].upper()
+        return self
+
+    class Config:
+        frozen = False
+
+
+class CarBaseMutableDTO(CarBaseDTO):
+    service_items: List[ServiceItemBaseDTO]
+
+    initials: str | None = None
+
+    @model_validator(mode='after')
+    def auto_initials(self) -> 'CarBaseMutableDTO':
+        if self.brand and self.model:
+            name = f"{self.brand} {self.model}"
+            words = name.split()
+            self.initials = ''.join(word[0] for word in words)[:2].upper()
+        return self
+
+    class Config:
+        frozen = False
+
 
 class CarResponseIdDTO(ImmutableDTO):
     id: UUID
@@ -56,7 +87,7 @@ class CarFilterDTO(ImmutableDTO):
 
 
 class CarDetailResponseDTO(CarBaseDTO):
-    service_items: List[ServiceItemBaseDTO]
+    service_items: List[ServiceItemBaseDTO | None] = None
 
 
 class CarUpdateRequestDTO(ImmutableDTO):
@@ -74,7 +105,7 @@ class CarUpdateRequestDTO(ImmutableDTO):
     notes: str | None = None
     is_archived: bool | None = None
 
-    @model_validator(mode='after')
+    @model_validator(mode='before')
     def auto_generate_name(self) -> 'CarUpdateRequestDTO':
         if self._name is not None:
             return self

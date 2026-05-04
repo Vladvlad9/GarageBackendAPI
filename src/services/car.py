@@ -21,7 +21,7 @@ class CarService:
 
     async def get_actual_car(self, car_id: UUID | str, user_id: UUID | str) -> Car:
         filters = [Car.id == car_id, Car.is_archived == False, Car.user_id == user_id]
-        car = await self._repo.get(filters=filters)
+        car = await self._repo.get(filters=filters, options=[joinedload(Car.service_items)])
         if not car:
             raise ObjectNotFoundError(name="Update_Car")
         return car

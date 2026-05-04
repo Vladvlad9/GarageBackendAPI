@@ -1,6 +1,8 @@
 from datetime import date
 from uuid import UUID
 
+from pydantic import model_validator
+
 from src.types.base import ImmutableDTO
 
 __all__ = ["ServiceItemResponseDTO", "ServiceItemBaseDTO"]
@@ -20,6 +22,13 @@ class ServiceItemBaseDTO(ImmutableDTO):
 
     notes: str | None = None
     is_active: bool
+
+    progress: float
+    is_overdue: bool
+    needs_attention: bool
+
+    next_due_km: int | None
+    next_due_date: date | None
 
 
 class ServiceItemResponseDTO(ImmutableDTO):

@@ -14,7 +14,7 @@ from src.types.car import (
     CarDetailResponseDTO,
     CarCreateDTO,
     CarUpdateRequestDTO,
-    CarFilterDTO
+    CarFilterDTO, CarBaseMutableDTO
 )
 from src.types.exeptions import (
     ToManyRequestsErrorDTO,
@@ -30,7 +30,7 @@ router = APIRouter(tags=["Car"], dependencies=[AuthenticateHeaderDepends])
 @router.get(
     path="/",
     status_code=status.HTTP_200_OK,
-    response_model=Paginator[CarDetailResponseDTO],
+    response_model=Paginator[CarBaseMutableDTO],
     responses={
         HTTP_500_INTERNAL_SERVER_ERROR: {"model": HTTPExceptionErrorDTO},
         HTTP_429_TOO_MANY_REQUESTS: {"model": ToManyRequestsErrorDTO},

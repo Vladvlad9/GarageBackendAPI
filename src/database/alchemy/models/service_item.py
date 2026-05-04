@@ -2,10 +2,12 @@ from datetime import date
 from typing import List
 from uuid import uuid4
 
-from sqlalchemy import UUID, ForeignKey, String, Integer, Date, CheckConstraint, Float, Text, Boolean, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import UUID, ForeignKey, String, Integer, Date, CheckConstraint, Float, Text, Boolean, UniqueConstraint, \
+    case, func, text, select
+from sqlalchemy.orm import Mapped, mapped_column, relationship, query_expression, column_property
 
 from src.database.alchemy.mixins import LifecycleMixin
+from src.database.alchemy.models import Car
 from src.database.alchemy.models.base import Base
 
 __all__ = ["ServiceItem"]
@@ -48,11 +50,131 @@ class ServiceItem(Base, LifecycleMixin):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 
-    car: Mapped["Car"] = relationship(back_populates="service_items")
+    car: Mapped[Car] = relationship(back_populates="service_items")
     records: Mapped[List["ServiceRecord"]] = relationship(
         back_populates="service_item",
         cascade="all, delete-orphan",
         order_by="ServiceRecord.date.desc()",
+    )
+
+    car_mileage = column_property((
+        select(Car.mileage)
+        .where(Car.id == car_id)
+        .correlate_except(Car)
+        .scalar_subquery()
+    ))
+
+    # сколько проехали
+    km_used = column_property(func.greatest(
+        0,
+        func.coalesce(car_mileage, 0) - last_km,
+    ))
+
+    # сколько дней прошло
+    days_used = column_property(
+        func.greatest(
+            0,
+            func.current_date() - last_date,
+        )
+    )
+
+    # ===== PROGRESS (как на фронте) =====
+    progress = column_property(
+        case(
+            # km приоритет
+            (
+                interval_km > 0,
+                func.least(
+                    1.0,
+                    func.greatest(
+                        0,
+                        func.coalesce(car_mileage, 0) - last_km
+                    ) / func.nullif(interval_km, 0),
+                ),
+            ),
+
+            # days fallback
+            (
+                (interval_days > 0) & (last_date.isnot(None)),
+                func.least(
+                    1.0,
+                    func.greatest(
+                        0,
+                        func.current_date() - last_date
+                    ) / func.nullif(interval_days, 0),
+                ),
+            ),
+
+            else_=0.0,
+        )
+    )
+
+    # ===== OVERDUE =====
+    is_overdue = column_property(
+        case(
+            (
+                interval_km > 0,
+                func.greatest(
+                    0,
+                    func.coalesce(car_mileage, 0) - last_km
+                ) >= interval_km,
+            ),
+            (
+                (interval_days > 0) & (last_date.isnot(None)),
+                func.greatest(
+                    0,
+                    func.current_date() - last_date
+                ) >= interval_days,
+            ),
+            else_=False,
+        )
+    )
+
+    # ===== NEEDS ATTENTION =====
+    needs_attention = column_property(
+        case(
+            (
+                interval_km > 0,
+                (
+                        func.greatest(
+                            0,
+                            func.coalesce(car_mileage, 0) - last_km
+                        ) / func.nullif(interval_km, 0)
+                ) >= warn_at,
+            ),
+            (
+                (interval_days > 0) & (last_date.isnot(None)),
+                (
+                        func.greatest(
+                            0,
+                            func.current_date() - last_date
+                        ) / func.nullif(interval_days, 0)
+                ) >= warn_at,
+            ),
+            else_=False,
+        )
+    )
+
+    # ===== NEXT KM =====
+    next_due_km = column_property(
+        case(
+            (
+                interval_km > 0,
+                last_km + interval_km,
+            ),
+            else_=None,
+        )
+    )
+
+    # ===== NEXT DATE =====
+    next_due_date = column_property(
+        case(
+            (
+                (interval_days > 0) & (last_date.isnot(None)),
+                last_date + interval_days * text("interval '1 day'"),
+            ),
+            else_=None,
+        )
     )
 
     def __repr__(self) -> str:
@@ -60,3 +182,5 @@ class ServiceItem(Base, LifecycleMixin):
 
     def __str__(self) -> str:
         return f"ServiceItem id={self.id}, name={self.name}"
+
+# ServiceItem.initialize()

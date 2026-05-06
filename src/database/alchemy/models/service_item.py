@@ -2,9 +2,23 @@ from datetime import date
 from typing import List
 from uuid import uuid4
 
-from sqlalchemy import UUID, ForeignKey, String, Integer, Date, CheckConstraint, Float, Text, Boolean, UniqueConstraint, \
-    case, func, text, select
-from sqlalchemy.orm import Mapped, mapped_column, relationship, query_expression, column_property
+from sqlalchemy import (
+    UUID,
+    ForeignKey,
+    String,
+    Integer,
+    Date,
+    CheckConstraint,
+    Float,
+    Text,
+    Boolean,
+    UniqueConstraint,
+    case,
+    func,
+    text,
+    select
+)
+from sqlalchemy.orm import Mapped, mapped_column, relationship, column_property
 
 from src.database.alchemy.mixins import LifecycleMixin
 from src.database.alchemy.models import Car
@@ -18,10 +32,11 @@ class ServiceItem(Base, LifecycleMixin):
         CheckConstraint("interval_km >= 0", name="interval_km_positive"),
         CheckConstraint("last_km >= 0", name="last_km_positive"),
         CheckConstraint("interval_days >= 0", name="interval_days_positive"),
-        CheckConstraint("length(name) > 0", name="service_name_not_empty"),
+        # CheckConstraint("length(name) > 0", name="service_name_not_empty"),
         CheckConstraint("(interval_km > 0 OR interval_days > 0)", name="at_least_one_interval"),
         CheckConstraint("last_date IS NULL OR last_date <= CURRENT_DATE", name="last_date_in_past"),
-        UniqueConstraint("car_id", "name", name="uq_service_item_car_name"),
+        # UniqueConstraint("car_id", "name", name="uq_service_item_car_name"),
+        UniqueConstraint("car_id", name="uq_service_item_car_name"),
     )
     id: Mapped[UUID] = mapped_column(
         UUID,
@@ -33,8 +48,15 @@ class ServiceItem(Base, LifecycleMixin):
         ForeignKey("car.id", ondelete="CASCADE"),
         index=True,
     )
-    name: Mapped[str] = mapped_column(String(150))  # "Моторное масло"
-    icon: Mapped[str] = mapped_column(String(50), default="oil")  # ключ иконки
+
+    service_item_name_id: Mapped[UUID] = mapped_column(
+        UUID,
+        ForeignKey("service_item_name.id", ondelete="CASCADE"),
+        index=True,
+    )
+
+    # name: Mapped[str] = mapped_column(String(150))  # "Моторное масло"
+    # icon: Mapped[str] = mapped_column(String(50), default="oil")  # ключ иконки
 
     # интервал по пробегу (0 = не используется)
     interval_km: Mapped[int] = mapped_column(Integer, default=0)
@@ -178,9 +200,9 @@ class ServiceItem(Base, LifecycleMixin):
     )
 
     def __repr__(self) -> str:
-        return f"<ServiceItem(id={self.id}, name='{self.name}', car_id='{self.car_id}')>"
+        return f"<ServiceItem(id={self.id}, name='{self.service_item_name_id}', car_id='{self.car_id}')>"
 
     def __str__(self) -> str:
-        return f"ServiceItem id={self.id}, name={self.name}"
+        return f"ServiceItem id={self.id}, name={self.service_item_name_id}"
 
 # ServiceItem.initialize()

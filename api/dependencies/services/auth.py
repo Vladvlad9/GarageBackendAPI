@@ -25,7 +25,7 @@ HTTPAuthorizationCredentialsDepends = Annotated[HTTPAuthorizationCredentials, Se
 async def _get_token_payload(credentials: HTTPAuthorizationCredentialsDepends) -> TokenPayload:
     try:
         return await JWTManager.decode_access_token(token=credentials.credentials)
-    except DecodeError():
+    except DecodeError:
         raise InvalidTokenOrExpiredException()
 
 

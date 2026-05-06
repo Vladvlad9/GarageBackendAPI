@@ -1,3 +1,4 @@
+from .service_item_name import ServiceItemName
 from .user import User
 from .car import Car
 from .fuel_log import FuelLog
@@ -12,4 +13,5 @@ __all__ = [
     "ServiceRecord",
     "MileageLog",
     "FuelLog",
+    "ServiceItemName",
 ]

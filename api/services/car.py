@@ -12,7 +12,8 @@ from api.exeption import (
 )
 from src.exeptions import ObjectNotFoundError, ObjectAlreadyExistError
 from src.services.car import CarService
-from src.types.car import CarDetailResponseDTO, CarCreateDTO, CarUpdateRequestDTO, CarFilterDTO
+from src.types.car import CarDetailResponseDTO, CarCreateDTO, CarUpdateRequestDTO, CarFilterDTO, \
+    CarDetailResponseWithoutServiceItemsDTO
 
 from src.types.pagination import Paginator
 
@@ -40,7 +41,7 @@ class RESTCarService:
         return await self.car_service.get(car_id=car_id, user_id=user_id)
 
     @car_exception_handler()
-    async def create(self, data: CarCreateDTO, user_id: UUID | str) -> CarDetailResponseDTO:
+    async def create(self, data: CarCreateDTO, user_id: UUID | str) -> CarDetailResponseWithoutServiceItemsDTO:
         return await self.car_service.create(data=data, user_id=user_id)
 
     @car_exception_handler()

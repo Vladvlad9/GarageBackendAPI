@@ -4,7 +4,7 @@ from starlette.status import (
     HTTP_404_NOT_FOUND,
     HTTP_500_INTERNAL_SERVER_ERROR,
     HTTP_429_TOO_MANY_REQUESTS,
-    HTTP_409_CONFLICT
+    HTTP_409_CONFLICT,
 )
 
 from api.annotated_types import CarID, PageQuery, PageSizeQuery
@@ -14,13 +14,13 @@ from src.types.car import (
     CarDetailResponseDTO,
     CarCreateDTO,
     CarUpdateRequestDTO,
-    CarFilterDTO, CarBaseMutableDTO
+    CarFilterDTO, CarBaseMutableDTO, CarDetailResponseWithoutServiceItemsDTO
 )
 from src.types.exeptions import (
     ToManyRequestsErrorDTO,
     HTTPExceptionErrorDTO,
     ObjectNotFoundErrorDTO,
-    ObjectAlreadyExistErrorDTO
+    ObjectAlreadyExistErrorDTO,
 )
 from src.types.pagination import Paginator
 
@@ -37,10 +37,11 @@ router = APIRouter(tags=["Car"], dependencies=[AuthenticateHeaderDepends])
     },
 )
 async def car_list(
+        payload: TokenPayloadDepends,
         service: CarServiceDepends,
         page: PageQuery = 1,
         page_size: PageSizeQuery = 10,
-        filters: CarFilterDTO = Depends()
+        filters: CarFilterDTO = Depends(),
 ) -> Paginator[CarDetailResponseDTO]:
     return await service.car_list(page=page, page_size=page_size, filters=filters)
 
@@ -66,7 +67,7 @@ async def get(
 @router.post(
     path="/",
     status_code=status.HTTP_201_CREATED,
-    response_model=CarDetailResponseDTO,
+    response_model=CarDetailResponseWithoutServiceItemsDTO,
     responses={
         HTTP_500_INTERNAL_SERVER_ERROR: {"model": HTTPExceptionErrorDTO},
         HTTP_409_CONFLICT: {"model": ObjectAlreadyExistErrorDTO},
@@ -77,9 +78,7 @@ async def create(
         data: CarCreateDTO,
         service: CarServiceDepends,
         payload: TokenPayloadDepends
-) -> CarDetailResponseDTO:
-    print(f"Token {payload.get("sub")}")
-    print(f"Data {data}")
+) -> CarDetailResponseWithoutServiceItemsDTO:
     return await service.create(data=data, user_id=payload.get("sub"))
 
 

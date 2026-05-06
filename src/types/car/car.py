@@ -17,6 +17,7 @@ __all__ = [
     "CarUpdateRequestDTO",
     "CarDeleteRequestDTO",
     "CarBaseMutableDTO",
+    "CarDetailResponseWithoutServiceItemsDTO",
 ]
 
 from src.types.service_item import ServiceItemBaseDTO
@@ -89,6 +90,9 @@ class CarFilterDTO(ImmutableDTO):
 class CarDetailResponseDTO(CarBaseDTO):
     service_items: List[ServiceItemBaseDTO | None] = None
 
+class CarDetailResponseWithoutServiceItemsDTO(CarBaseDTO):
+    pass
+
 
 class CarUpdateRequestDTO(ImmutableDTO):
     _name: str | None = PrivateAttr(default=None)
@@ -130,18 +134,18 @@ class CarCreateDTO(ImmutableDTO):
         # data - это словарь или другой входной формат
         print("Полученные данные:", data)
 
-        # Доступ к полям как к ключам словаря
-        if isinstance(data, dict):
-            print(data.get('brand'))  # используем .get() для безопасности
-            print(data.get('model'))
-            print(data.get('year'))
-        else:
-            # Если это уже объект
-            print(getattr(data, 'brand', None))
-            print(getattr(data, 'model', None))
-            print(getattr(data, 'year', None))
+        # # Доступ к полям как к ключам словаря
+        # if isinstance(data, dict):
+        #     print(data.get('brand'))  # используем .get() для безопасности
+        #     print(data.get('model'))
+        #     print(data.get('year'))
+        # else:
+        #     # Если это уже объект
+        #     print(getattr(data, 'brand', None))
+        #     print(getattr(data, 'model', None))
+        #     print(getattr(data, 'year', None))
 
-        return data  # обязательно вернуть данные!
+        return data
 
 
 class CarDeleteRequestDTO(ImmutableDTO):

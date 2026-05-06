@@ -5,7 +5,8 @@ from src.types.car.car import (
     CarCreateDTO,
     CarUpdateRequestDTO,
     CarDeleteRequestDTO,
-    CarBaseMutableDTO
+    CarBaseMutableDTO,
+    CarDetailResponseWithoutServiceItemsDTO,
 )
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     "CarUpdateRequestDTO",
     "CarDeleteRequestDTO",
     "CarBaseMutableDTO",
+    "CarDetailResponseWithoutServiceItemsDTO",
 ]

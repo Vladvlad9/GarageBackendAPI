@@ -1,6 +1,7 @@
 from typing import Literal
 
 from pydantic import Field
+from starlette import status
 
 from src.types.base import ImmutableDTO
 
@@ -45,3 +46,14 @@ class HTTPExceptionErrorDTO(ImmutableDTO):
 
 class IncorrectPasswordErrorDTO(ImmutableDTO):
     detail: Literal["incorrect_password"] = "incorrect_password"
+
+
+class InvalidTokenOrExpiredException(ImmutableDTO):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=UnauthorizedErrorDTO().detail
+        )
+
+class UnauthorizedErrorDTO(ImmutableDTO):
+    detail: Literal["unauthorized"] = "unauthorized"

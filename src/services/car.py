@@ -5,11 +5,12 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from src.database.alchemy.models import Car
+from src.database.alchemy.models import Car, ServiceItem
 from src.exeptions import ObjectNotFoundError, InternalServerError
 from src.repos.alchemy import CarRepo
 
-from src.types.car import CarDetailResponseDTO, CarCreateDTO, CarFilterDTO, CarDeleteRequestDTO
+from src.types.car import CarDetailResponseDTO, CarCreateDTO, CarFilterDTO, CarDeleteRequestDTO, \
+    CarDetailResponseWithoutServiceItemsDTO
 from src.types.pagination import Paginator, Pagination
 
 __all__ = ["CarService"]
@@ -30,14 +31,15 @@ class CarService:
         car = await self.get_actual_car(car_id=car_id, user_id=user_id)
         return CarDetailResponseDTO.model_validate(obj=car)
 
-    async def create(self, data: CarCreateDTO, user_id: UUID | str) -> CarDetailResponseDTO:
+    async def create(self, data: CarCreateDTO, user_id: UUID | str) -> CarDetailResponseWithoutServiceItemsDTO:
         car_data = data.model_dump()
+        print("car_data", car_data)
         car_data["user_id"] = user_id
         car_data["name"] = f"{data.brand} {data.model}"
         try:
             car = await self._repo.insert(obj=car_data)
-            return CarDetailResponseDTO.model_validate(obj=car)
-        except IntegrityError:
+            return CarDetailResponseWithoutServiceItemsDTO.model_validate(obj=car)
+        except IntegrityError as e:
             raise InternalServerError(name="Create_Car")
 
     async def update(self, car_id: UUID, user_id: UUID | str, data) -> CarDetailResponseDTO:
@@ -74,7 +76,9 @@ class CarService:
             page=page,
             page_size=page_size,
             filters=[*filter_conditions] if filter_conditions else None,
-            optional=[joinedload(Car.service_items)]
+            optional=[
+                joinedload(Car.service_items.and_(ServiceItem.is_active == False))
+            ]
         )
 
         return Paginator(

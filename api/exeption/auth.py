@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from starlette.status import HTTP_403_FORBIDDEN, HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_403_FORBIDDEN, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
 __all__ = ["TokenNotProvidedException", "IncorrectPasswordException", "InvalidTokenOrExpiredException"]
 
@@ -11,7 +11,7 @@ class TokenNotProvidedException(HTTPException):
 
 class InvalidTokenOrExpiredException(HTTPException):
     def __init__(self):
-        super().__init__(status_code=HTTP_403_FORBIDDEN, detail="invalid_token_or_expired")
+        super().__init__(status_code=HTTP_401_UNAUTHORIZED, detail="invalid_token_or_expired")
 
 
 class IncorrectPasswordException(HTTPException):

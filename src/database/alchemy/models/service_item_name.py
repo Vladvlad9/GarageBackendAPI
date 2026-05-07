@@ -1,4 +1,4 @@
-import uuid
+from uuid import uuid4
 
 from sqlalchemy import UUID, String
 from sqlalchemy.orm import Mapped, mapped_column
@@ -11,7 +11,7 @@ __all__ = ["ServiceItemName"]
 class ServiceItemName(Base):
     id: Mapped[UUID] = mapped_column(
         UUID,
-        insert_default=uuid.uuid4,
+        insert_default=uuid4,
         primary_key=True,
     )
     name: Mapped[str] = mapped_column(String(150))  # "Моторное масло"

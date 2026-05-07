@@ -5,7 +5,6 @@ from uuid import uuid4
 from sqlalchemy import (
     UUID,
     ForeignKey,
-    String,
     Integer,
     Date,
     CheckConstraint,
@@ -51,7 +50,7 @@ class ServiceItem(Base, LifecycleMixin):
 
     service_item_name_id: Mapped[UUID] = mapped_column(
         UUID,
-        ForeignKey("service_item_name.id", ondelete="CASCADE"),
+        ForeignKey("service_item_name.id", ondelete="CASCADE", name='service_item_name_id_fkey'),
         index=True,
     )
 

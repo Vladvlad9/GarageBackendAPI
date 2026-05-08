@@ -11,8 +11,8 @@ __all__ = ["ServiceItemResponseDTO", "ServiceItemBaseDTO"]
 class ServiceItemBaseDTO(ImmutableDTO):
     id: UUID
     car_id: UUID
-    name: str
-    icon: str
+    service_item_name_id: UUID
+    # icon: str
 
     interval_km: int
     interval_days: int

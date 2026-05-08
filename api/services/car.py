@@ -12,8 +12,13 @@ from api.exeption import (
 )
 from src.exeptions import ObjectNotFoundError, ObjectAlreadyExistError
 from src.services.car import CarService
-from src.types.car import CarDetailResponseDTO, CarCreateDTO, CarUpdateRequestDTO, CarFilterDTO, \
-    CarDetailResponseWithoutServiceItemsDTO
+from src.types.car import (
+    CarDetailResponseDTO,
+    CarCreateDTO,
+    CarUpdateRequestDTO,
+    CarFilterDTO,
+    CarDetailResponseWithoutServiceItemsDTO,
+)
 
 from src.types.pagination import Paginator
 

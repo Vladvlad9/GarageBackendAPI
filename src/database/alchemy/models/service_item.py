@@ -199,9 +199,9 @@ class ServiceItem(Base, LifecycleMixin):
     )
 
     def __repr__(self) -> str:
-        return f"<ServiceItem(id={self.id}, name='{self.service_item_name_id}', car_id='{self.car_id}')>"
+        return f"<ServiceItem(id={self.id}, name_id='{self.service_item_name_id}', car_id='{self.car_id}')>"
 
     def __str__(self) -> str:
-        return f"ServiceItem id={self.id}, name={self.service_item_name_id}"
+        return f"ServiceItem id={self.id}, name_id={self.service_item_name_id}"
 
 # ServiceItem.initialize()

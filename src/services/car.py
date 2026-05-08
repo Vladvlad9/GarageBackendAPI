@@ -9,8 +9,13 @@ from src.database.alchemy.models import Car, ServiceItem
 from src.exeptions import ObjectNotFoundError, InternalServerError
 from src.repos.alchemy import CarRepo
 
-from src.types.car import CarDetailResponseDTO, CarCreateDTO, CarFilterDTO, CarDeleteRequestDTO, \
+from src.types.car import (
+    CarDetailResponseDTO,
+    CarCreateDTO,
+    CarFilterDTO,
+    CarDeleteRequestDTO,
     CarDetailResponseWithoutServiceItemsDTO
+)
 from src.types.pagination import Paginator, Pagination
 
 __all__ = ["CarService"]

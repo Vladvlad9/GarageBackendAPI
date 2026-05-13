@@ -31,11 +31,11 @@ class ServiceItem(Base, LifecycleMixin):
         CheckConstraint("interval_km >= 0", name="interval_km_positive"),
         CheckConstraint("last_km >= 0", name="last_km_positive"),
         CheckConstraint("interval_days >= 0", name="interval_days_positive"),
-        # CheckConstraint("length(name) > 0", name="service_name_not_empty"),
         CheckConstraint("(interval_km > 0 OR interval_days > 0)", name="at_least_one_interval"),
         CheckConstraint("last_date IS NULL OR last_date <= CURRENT_DATE", name="last_date_in_past"),
         # UniqueConstraint("car_id", "name", name="uq_service_item_car_name"),
-        UniqueConstraint("car_id", name="uq_service_item_car_name"),
+        # UniqueConstraint("car_id", "service_item_name_id", name="uq_service_item_car_name"),
+        # UniqueConstraint("car_id", name="uq_service_item_car_name"),
     )
     id: Mapped[UUID] = mapped_column(
         UUID,
@@ -77,6 +77,10 @@ class ServiceItem(Base, LifecycleMixin):
         cascade="all, delete-orphan",
         order_by="ServiceRecord.date.desc()",
     )
+
+    # service_item_name: Mapped["ServiceItemName"] = relationship(
+    #     back_populates="service_item"
+    # )
 
     car_mileage = column_property((
         select(Car.mileage)

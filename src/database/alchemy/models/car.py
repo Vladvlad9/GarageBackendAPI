@@ -54,7 +54,7 @@ class Car(Base, LifecycleMixin):
     service_items: Mapped[List["ServiceItem"]] = relationship(
         back_populates="car",
         cascade="all, delete-orphan",
-        order_by="ServiceItem.name",
+        order_by="ServiceItem.created_at.desc()",
     )
     service_records: Mapped[List["ServiceRecord"]] = relationship(
         back_populates="car",

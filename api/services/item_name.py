@@ -13,7 +13,7 @@ from api.exeption import (
 from src.exeptions import ObjectNotFoundError, ObjectAlreadyExistError
 from src.services.service_item_name import ItemNameService
 from src.types.pagination import Paginator
-from src.types.service_item_name import ServiceItemNameBase
+from src.types.service_item_name import ServiceItemNameBase, ItemNameCreateDTO, ItemNameUpdateDTO
 
 item_name_exception_handler = ExceptionHandlerFactory(
     exc_mapping={
@@ -35,12 +35,12 @@ class RESTItemNameService:
         return await self.item_name.get(item_id=item_id)
 
     @item_name_exception_handler()
-    async def create(self):
-        pass
+    async def create(self, data: ItemNameCreateDTO) -> ServiceItemNameBase:
+        return await self.item_name.create(data=data)
 
     @item_name_exception_handler()
-    async def update(self, item_id: UUID):
-        pass
+    async def update(self, item_id: UUID, data: ItemNameUpdateDTO) -> ServiceItemNameBase:
+        return self.item_name.update(item_id=item_id, data=data)
 
     @item_name_exception_handler()
     async def delete(self, item_id: UUID):

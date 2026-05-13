@@ -6,7 +6,7 @@ from api.annotated_types.service_item_name import ItemNameID
 from api.dependencies.services import ItemNameServiceDepends
 from api.dependencies.services.auth import AuthenticateHeaderDepends
 from src.types.pagination import Paginator
-from src.types.service_item_name import ServiceItemNameBase
+from src.types.service_item_name import ServiceItemNameBase, ItemNameCreateDTO, ItemNameUpdateDTO
 
 router = APIRouter(tags=["ServiceItemsName"], dependencies=[AuthenticateHeaderDepends])
 
@@ -42,9 +42,10 @@ async def get_service_items_name(
     response_model=ServiceItemNameBase
 )
 async def create_service_items_name(
+        data: ItemNameCreateDTO,
         service: ItemNameServiceDepends
 ) -> ServiceItemNameBase:
-    return await service.create()
+    return await service.create(data=data)
 
 
 @router.patch(
@@ -54,9 +55,10 @@ async def create_service_items_name(
 )
 async def update_service_items_name(
         item_id: ItemNameID,
+        data: ItemNameUpdateDTO,
         service: ItemNameServiceDepends
 ) -> ServiceItemNameBase:
-    return await service.update(item_id=item_id)
+    return await service.update(item_id=item_id, data=data)
 
 
 @router.delete(

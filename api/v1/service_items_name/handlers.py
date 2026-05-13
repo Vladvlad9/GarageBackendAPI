@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from starlette import status
 
+from api.annotated_types import PageQuery, PageSizeQuery
 from api.annotated_types.service_item_name import ItemNameID
 from api.dependencies.services import ItemNameServiceDepends
 from api.dependencies.services.auth import AuthenticateHeaderDepends
@@ -15,8 +16,12 @@ router = APIRouter(tags=["ServiceItemsName"], dependencies=[AuthenticateHeaderDe
     status_code=status.HTTP_200_OK,
     response_model=Paginator[ServiceItemNameBase]
 )
-async def get_service_car_list(service: ItemNameServiceDepends) -> Paginator[ServiceItemNameBase]:
-    return await service.list()
+async def get_service_car_list(
+        service: ItemNameServiceDepends,
+        page: PageQuery = 1,
+        page_size: PageSizeQuery = 10,
+) -> Paginator[ServiceItemNameBase]:
+    return await service.list(page=page, page_size=page_size)
 
 
 @router.get(

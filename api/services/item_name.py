@@ -12,6 +12,7 @@ from api.exeption import (
 )
 from src.exeptions import ObjectNotFoundError, ObjectAlreadyExistError
 from src.services.service_item_name import ItemNameService
+from src.types.pagination import Paginator
 from src.types.service_item_name import ServiceItemNameBase
 
 item_name_exception_handler = ExceptionHandlerFactory(
@@ -45,5 +46,5 @@ class RESTItemNameService:
     async def delete(self, item_id: UUID):
         pass
 
-    async def list(self):
-        pass
+    async def list(self, page: int, page_size: int) -> Paginator[ServiceItemNameBase]:
+        return await self.item_name.list(page=page, page_size=page_size)

@@ -40,11 +40,11 @@ class RESTItemNameService:
 
     @item_name_exception_handler()
     async def update(self, item_id: UUID, data: ItemNameUpdateDTO) -> ServiceItemNameBase:
-        return self.item_name.update(item_id=item_id, data=data)
+        return await self.item_name.update(item_id=item_id, data=data)
 
     @item_name_exception_handler()
-    async def delete(self, item_id: UUID):
-        pass
+    async def delete(self, item_id: UUID) -> None:
+        await self.item_name.delete(item_id=item_id)
 
     async def list(self, page: int, page_size: int) -> Paginator[ServiceItemNameBase]:
         return await self.item_name.list(page=page, page_size=page_size)

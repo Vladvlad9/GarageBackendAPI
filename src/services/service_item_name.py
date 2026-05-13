@@ -51,6 +51,7 @@ class ItemNameService:
 
     async def update(self, item_id: UUID, data: ItemNameUpdateDTO):
         await self.get_actual_item_name(item_id=item_id)
+
         obj = data.model_dump(exclude_unset=True, exclude_none=True)
         filters = [ServiceItemName.id == item_id]
         try:
@@ -59,8 +60,10 @@ class ItemNameService:
         except IntegrityError:
             raise InternalServerError(name="Update_ItemName")
 
-    async def delete(self, item_id: UUID):
-        pass
+    async def delete(self, item_id: UUID) -> None:
+        await self.get_actual_item_name(item_id=item_id)
+        filters = [ServiceItemName.id == item_id]
+        await self._repo.delete(filters=filters)
 
     async def list(self, page: int, page_size: int) -> Paginator[ServiceItemNameBase]:
         count = await self._repo.count()

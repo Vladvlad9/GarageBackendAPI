@@ -1,9 +1,9 @@
 from datetime import date
 from uuid import UUID
 
-from pydantic import model_validator
-
 from src.types.base import ImmutableDTO
+
+from src.types.service_item_name import ServiceItemNameBase
 
 __all__ = ["ServiceItemResponseDTO", "ServiceItemBaseDTO"]
 
@@ -11,8 +11,8 @@ __all__ = ["ServiceItemResponseDTO", "ServiceItemBaseDTO"]
 class ServiceItemBaseDTO(ImmutableDTO):
     id: UUID
     car_id: UUID
-    service_item_name_id: UUID
-    # icon: str
+    service_item_name: ServiceItemNameBase
+    # service_item_name_id: UUID
 
     interval_km: int
     interval_days: int

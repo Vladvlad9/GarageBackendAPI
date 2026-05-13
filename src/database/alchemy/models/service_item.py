@@ -78,9 +78,9 @@ class ServiceItem(Base, LifecycleMixin):
         order_by="ServiceRecord.date.desc()",
     )
 
-    # service_item_name: Mapped["ServiceItemName"] = relationship(
-    #     back_populates="service_item"
-    # )
+    service_item_name: Mapped["ServiceItemName"] = relationship(
+        back_populates="service_item"
+    )
 
     car_mileage = column_property((
         select(Car.mileage)

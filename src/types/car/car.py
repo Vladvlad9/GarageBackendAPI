@@ -8,6 +8,10 @@ from src.enums.car import FuelTypeEnum, TransmissionEnum
 from src.types.annotated_types import CarBrandTypes, ModelBrandTypes, MileageTypes, CarYearTypes
 from src.types.base import ImmutableDTO
 
+from src.types.service_item import ServiceItemBaseDTO
+
+from src.utils import now
+
 __all__ = [
     "CarBaseDTO",
     "CarResponseIdDTO",
@@ -19,10 +23,6 @@ __all__ = [
     "CarBaseMutableDTO",
     "CarDetailResponseWithoutServiceItemsDTO",
 ]
-
-from src.types.service_item import ServiceItemBaseDTO
-
-from src.utils import now
 
 
 class CarBaseDTO(ImmutableDTO):
@@ -89,6 +89,7 @@ class CarFilterDTO(ImmutableDTO):
 
 class CarDetailResponseDTO(CarBaseDTO):
     service_items: List[ServiceItemBaseDTO | None] = None
+
 
 class CarDetailResponseWithoutServiceItemsDTO(CarBaseDTO):
     pass

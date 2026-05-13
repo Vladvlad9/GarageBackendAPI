@@ -8,9 +8,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database.alchemy.mixins import LifecycleMixin
 from src.database.alchemy.models.base import Base
 
-__all__ = ["Car"]
-
 from src.enums.car import TransmissionEnum, FuelTypeEnum
+
+__all__ = ["Car"]
 
 
 class Car(Base, LifecycleMixin):

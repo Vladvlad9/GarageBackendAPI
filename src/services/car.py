@@ -3,7 +3,7 @@ from uuid import UUID
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, contains_eager
 
 from src.database.alchemy.models import Car, ServiceItem
 from src.exeptions import ObjectNotFoundError, InternalServerError
@@ -27,7 +27,9 @@ class CarService:
 
     async def get_actual_car(self, car_id: UUID | str, user_id: UUID | str) -> Car:
         filters = [Car.id == car_id, Car.is_archived == False, Car.user_id == user_id]
-        car = await self._repo.get(filters=filters, options=[joinedload(Car.service_items)])
+        car = await self._repo.get(filters=filters, options=[
+            joinedload(Car.service_items).joinedload(ServiceItem.service_item_name)
+        ])
         if not car:
             raise ObjectNotFoundError(name="Update_Car")
         return car
@@ -82,7 +84,8 @@ class CarService:
             page_size=page_size,
             filters=[*filter_conditions] if filter_conditions else None,
             optional=[
-                joinedload(Car.service_items.and_(ServiceItem.is_active == False))
+                # joinedload(Car.service_items.and_(ServiceItem.is_active == False))
+                contains_eager(Car.service_items.and_(ServiceItem.is_active == False)).joinedload(ServiceItem.service_item_name)
             ]
         )
 

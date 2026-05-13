@@ -57,7 +57,7 @@ async def get_service_items_name(
 
 
 @router.post(
-    path="/{id}",
+    path="/",
     status_code=status.HTTP_201_CREATED,
     response_model=ServiceItemNameBase,
     responses={

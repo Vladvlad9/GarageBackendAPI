@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from sqlalchemy import UUID, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database.alchemy.models.base import Base
 
@@ -17,6 +17,9 @@ class ServiceItemName(Base):
     name: Mapped[str] = mapped_column(String(150))  # "Моторное масло"
     icon: Mapped[str] = mapped_column(String(50), default="oil")  # ключ иконки
 
+    service_item: Mapped["ServiceItem"] = relationship(
+        back_populates="service_item_name"
+    )
 
     def __repr__(self) -> str:
         return f"<ServiceItemName(id={self.id}, name='{self.name}', icon='{self.icon}')>"

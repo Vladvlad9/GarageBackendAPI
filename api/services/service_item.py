@@ -15,7 +15,7 @@ from src.services import ServiceItem
 
 __all__ = ["RESTServiceItem"]
 
-from src.types.service_item import ServiceItemBaseDTO
+from src.types.service_item import ServiceItemBaseDTO, ServiceItemCreateDTO, ServiceItemCoreDTO
 
 service_item_exception_handler = ExceptionHandlerFactory(
     exc_mapping={
@@ -36,8 +36,8 @@ class RESTServiceItem:
         return await self.car_service.get(service_id=service_id)
 
     @service_item_exception_handler()
-    async def create(self):
-        return await self.car_service.create()
+    async def create(self, data: ServiceItemCreateDTO) -> ServiceItemCoreDTO:
+        return await self.car_service.create(data=data)
 
     @service_item_exception_handler()
     async def update(self):

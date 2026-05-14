@@ -110,17 +110,19 @@ class CarUpdateRequestDTO(ImmutableDTO):
     notes: str | None = None
     is_archived: bool | None = None
 
-    @model_validator(mode='before')
-    def auto_generate_name(self) -> 'CarUpdateRequestDTO':
-        if self._name is not None:
-            return self
-
-        brand_value = self.brand if self.brand else None
-        model_value = self.model if self.model else None
-
-        if brand_value and model_value:
-            self._name = f"{brand_value} {model_value}"
-        return self
+    # @model_validator(mode='before')
+    # def auto_generate_name(self, data: Any) -> 'CarUpdateRequestDTO':
+    #     print("Полученные данные:", data)
+    #
+    #     if self._name is not None:
+    #         return self
+    #
+    #     brand_value = self.brand if self.brand else None
+    #     model_value = self.model if self.model else None
+    #
+    #     if brand_value and model_value:
+    #         self._name = f"{brand_value} {model_value}"
+    #     return self
 
 
 class CarCreateDTO(ImmutableDTO):

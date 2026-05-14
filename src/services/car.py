@@ -3,7 +3,7 @@ from uuid import UUID
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload, contains_eager
+from sqlalchemy.orm import joinedload
 
 from src.database.alchemy.models import Car, ServiceItem
 from src.exeptions import ObjectNotFoundError, InternalServerError
@@ -84,8 +84,7 @@ class CarService:
             page_size=page_size,
             filters=[*filter_conditions] if filter_conditions else None,
             optional=[
-                # joinedload(Car.service_items.and_(ServiceItem.is_active == False))
-                contains_eager(Car.service_items.and_(ServiceItem.is_active == False)).joinedload(ServiceItem.service_item_name)
+                joinedload(Car.service_items).joinedload(ServiceItem.service_item_name)
             ]
         )
 

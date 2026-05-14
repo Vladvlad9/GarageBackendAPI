@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,6 +14,8 @@ from src.exeptions import ObjectNotFoundError, ObjectAlreadyExistError
 from src.services import ServiceItem
 
 __all__ = ["RESTServiceItem"]
+
+from src.types.service_item import ServiceItemBaseDTO
 
 service_item_exception_handler = ExceptionHandlerFactory(
     exc_mapping={
@@ -28,8 +32,8 @@ class RESTServiceItem:
         self.car_service = ServiceItem(session=session)
 
     @service_item_exception_handler()
-    async def get(self):
-        return await self.car_service.get()
+    async def get(self, service_id: UUID) -> ServiceItemBaseDTO:
+        return await self.car_service.get(service_id=service_id)
 
     @service_item_exception_handler()
     async def create(self):
@@ -40,5 +44,5 @@ class RESTServiceItem:
         return await self.car_service.update()
 
     @service_item_exception_handler()
-    async def delete(self):
+    async def delete(self) -> None:
         await self.car_service.delete()

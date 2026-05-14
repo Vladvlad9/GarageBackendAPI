@@ -5,14 +5,13 @@ from src.types.base import ImmutableDTO
 
 from src.types.service_item_name import ServiceItemNameBase
 
-__all__ = ["ServiceItemResponseDTO", "ServiceItemBaseDTO"]
+__all__ = ["ServiceItemResponseDTO", "ServiceItemBaseDTO", "ServiceItemCreateDTO"]
 
 
 class ServiceItemBaseDTO(ImmutableDTO):
     id: UUID
     car_id: UUID
     service_item_name: ServiceItemNameBase
-    # service_item_name_id: UUID
 
     interval_km: int
     interval_days: int
@@ -33,3 +32,9 @@ class ServiceItemBaseDTO(ImmutableDTO):
 
 class ServiceItemResponseDTO(ImmutableDTO):
     pass
+
+
+class ServiceItemCreateDTO(ImmutableDTO):
+    service_item_id: UUID
+    last_km: int
+    last_date: date

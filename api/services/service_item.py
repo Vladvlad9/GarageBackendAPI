@@ -29,20 +29,20 @@ service_item_exception_handler = ExceptionHandlerFactory(
 
 class RESTServiceItem:
     def __init__(self, session: AsyncSession):
-        self.car_service = ServiceItem(session=session)
+        self.item_service = ServiceItem(session=session)
 
     @service_item_exception_handler()
     async def get(self, service_id: UUID) -> ServiceItemBaseDTO:
-        return await self.car_service.get(service_id=service_id)
+        return await self.item_service.get(service_id=service_id)
 
     @service_item_exception_handler()
     async def create(self, data: ServiceItemCreateDTO) -> ServiceItemCoreDTO:
-        return await self.car_service.create(data=data)
+        return await self.item_service.create(data=data)
 
     @service_item_exception_handler()
     async def update(self):
-        return await self.car_service.update()
+        return await self.item_service.update()
 
     @service_item_exception_handler()
     async def delete(self) -> None:
-        await self.car_service.delete()
+        await self.item_service.delete()

@@ -18,7 +18,7 @@ class ItemNameService:
     def __init__(self, session: AsyncSession):
         self._repo = ItemNameRepo(session=session)
 
-    async def get_actual_item_name(self, name: str = None, item_id: UUID = None) -> ServiceItemNameBase:
+    async def get_actual_item_name(self, name: str = None, item_id: UUID = None) -> ServiceItemNameBase | bool:
         filters = []
 
         if name:
@@ -28,7 +28,9 @@ class ItemNameService:
 
         item_name = await self._repo.get(filters=filters)
         if not item_name:
-            raise ObjectNotFoundError(name="ItemName")
+            return False
+            # raise ObjectNotFoundError(name="ItemName1")
+
         return ServiceItemNameBase.model_validate(obj=item_name)
 
     async def get(self, item_id: UUID) -> ServiceItemNameBase:

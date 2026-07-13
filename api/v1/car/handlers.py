@@ -14,7 +14,7 @@ from src.types.car import (
     CarDetailResponseDTO,
     CarCreateDTO,
     CarUpdateRequestDTO,
-    CarFilterDTO, CarBaseMutableDTO, CarDetailResponseWithoutServiceItemsDTO
+    CarFilterDTO, CarBaseMutableDTO, CarDetailResponseWithoutServiceItemsDTO, CarBaseDTO
 )
 from src.types.exeptions import (
     ToManyRequestsErrorDTO,
@@ -85,7 +85,7 @@ async def create(
 @router.patch(
     path="/{id}",
     status_code=status.HTTP_202_ACCEPTED,
-    response_model=CarDetailResponseDTO,
+    response_model=CarBaseDTO,
     responses={
         HTTP_404_NOT_FOUND: {"model": ObjectNotFoundErrorDTO},
         HTTP_500_INTERNAL_SERVER_ERROR: {"model": HTTPExceptionErrorDTO},
@@ -97,7 +97,7 @@ async def update(
         service: CarServiceDepends,
         payload: TokenPayloadDepends,
         data: CarUpdateRequestDTO
-) -> CarDetailResponseDTO:
+) -> CarBaseDTO:
     return await service.update(car_id=car_id, user_id=payload.get("sub"), data=data)
 
 

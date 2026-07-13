@@ -17,7 +17,7 @@ from src.types.car import (
     CarCreateDTO,
     CarUpdateRequestDTO,
     CarFilterDTO,
-    CarDetailResponseWithoutServiceItemsDTO,
+    CarDetailResponseWithoutServiceItemsDTO, CarBaseDTO,
 )
 
 from src.types.pagination import Paginator
@@ -50,7 +50,7 @@ class RESTCarService:
         return await self.car_service.create(data=data, user_id=user_id)
 
     @car_exception_handler()
-    async def update(self, car_id: UUID | str, user_id: UUID | str, data: CarUpdateRequestDTO) -> CarDetailResponseDTO:
+    async def update(self, car_id: UUID | str, user_id: UUID | str, data: CarUpdateRequestDTO) -> CarBaseDTO:
         return await self.car_service.update(car_id=car_id, user_id=user_id, data=data)
 
     @car_exception_handler()

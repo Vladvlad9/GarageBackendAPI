@@ -14,7 +14,7 @@ from src.types.car import (
     CarCreateDTO,
     CarFilterDTO,
     CarDeleteRequestDTO,
-    CarDetailResponseWithoutServiceItemsDTO
+    CarDetailResponseWithoutServiceItemsDTO, CarBaseDTO
 )
 from src.types.pagination import Paginator, Pagination
 
@@ -49,7 +49,7 @@ class CarService:
         except IntegrityError as e:
             raise InternalServerError(name="Create_Car")
 
-    async def update(self, car_id: UUID, user_id: UUID | str, data) -> CarDetailResponseDTO:
+    async def update(self, car_id: UUID, user_id: UUID | str, data) -> CarBaseDTO:
         await self.get_actual_car(car_id=car_id, user_id=user_id)
 
         filters = [Car.id == car_id, Car.is_archived == False, Car.user_id == user_id]
@@ -63,7 +63,7 @@ class CarService:
         if not car:
             raise ObjectNotFoundError(name="Update_Car")
 
-        return CarDetailResponseDTO.model_validate(obj=car)
+        return CarBaseDTO.model_validate(obj=car)
 
     async def delete(self, car_id: UUID, user_id: UUID | str) -> None:
         car = await self.get_actual_car(car_id=car_id, user_id=user_id)

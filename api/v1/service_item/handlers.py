@@ -57,4 +57,5 @@ async def create_service_item(
         service: ServiceItemDepends,
         data: ServiceItemCreateDTO
 ) -> ServiceItemCoreDTO:
+    print(f"create_service_item {data}")
     return await service.create(data=data)

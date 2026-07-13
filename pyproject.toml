@@ -17,5 +17,4 @@ dependencies = [
     "redis>=7.4.0",
     "orjson>=3.11.8",
     "cryptography>=46.0.7",
-    "psycopg2-binary>=2.9.12",
 ]
